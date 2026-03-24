@@ -4,16 +4,44 @@ from src.visualizer import MapVisualizer
 
 def main():
     # Initialize network manager and load map data
-    manager = NetworkManager("Coaldale, Alberta, Canada")
+
+    PROVINCE_CSV = {
+    "Alberta":                  "data/census/98-401-X2021006_English_CSV_data_Prairies.csv",
+    "British Columbia":         "data/census/98-401-X2021006_English_CSV_data_BritishColumbia.csv",
+    "Manitoba":                 "data/census/98-401-X2021006_English_CSV_data_Prairies.csv",
+    "New Brunswick":            "data/census/98-401-X2021006_English_CSV_data_Atlantic.csv",
+    "Newfoundland and Labrador":"data/census/98-401-X2021006_English_CSV_data_Atlantic.csv",
+    "Northwest Territories":    "data/census/98-401-X2021006_English_CSV_data_Territories.csv",
+    "Nova Scotia":              "data/census/98-401-X2021006_English_CSV_data_Atlantic.csv",
+    "Nunavut":                  "data/census/98-401-X2021006_English_CSV_data_Territories.csv",
+    "Ontario":                  "data/census/98-401-X2021006_English_CSV_data_Ontario.csv",
+    "Prince Edward Island":     "data/census/98-401-X2021006_English_CSV_data_Atlantic.csv",
+    "Quebec":                   "data/census/98-401-X2021006_English_CSV_data_Quebec.csv",
+    "Saskatchewan":             "data/census/98-401-X2021006_English_CSV_data_Prairies.csv",
+    "Yukon":                    "data/census/98-401-X2021006_English_CSV_data_Territories.csv",
+    }
+    
+    place = input("Please enter a Canadian city (e.g. Coaldale, Alberta): ") + ", Canada"
+    province = place.split(",")[1].strip().replace(", Canada", "")
+
+    pop_path = PROVINCE_CSV.get(province)
+    if pop_path is None:
+        raise ValueError(f"Unrecognized province: '{province}'. Check spelling.")
+    p_count= int(input("How many Hospitals? "))
+
+    manager = NetworkManager(place)
     graph = manager.load_graph()
     
     # Select random sample points and calculate distance matrix
-    sample_nodes, distances = manager.get_sample_distances(sample_size=30, seed=42)
-
+    demand_weights = manager.load_demand_from_shapefile("data/DAdata/lda_000b21a_e.shp", "data/PopulationData/98-401-X2021006_English_CSV_data_Prairies.csv")
+    demand_nodes = list(demand_weights.keys())
+    distances = manager.compute_distances(demand_nodes)
+    print(f"done with distance")
     # Solve p-center problem to locate facilities
     # p_count = # of Hospitals
-    solver = PCenterSolver(sample_nodes, distances, p_count=2)
+    solver = PCenterSolver(demand_nodes, distances, p_count=p_count, weights=demand_weights)
     hospitals, max_dist = solver.solve()
+
 
     # Print optimization status and facility locations
     print(f"\nStatus: Optimal")
@@ -23,7 +51,7 @@ def main():
 
     # Generate and save spatial visualization
     viz = MapVisualizer(graph)
-    viz.save_map(hospitals, filename="hospital_map.png")
+    viz.save_map(hospitals, filename=f"images/{place}_p={p_count}.png")
 
 if __name__ == "__main__":
     main()

@@ -1,10 +1,11 @@
 import pulp
 
 class PCenterSolver:
-    def __init__(self, nodes, distances, p_count):
+    def __init__(self, nodes, distances, p_count, weights):
         self.nodes = nodes
         self.distances = distances
         self.p_count = p_count
+        self.weights = weights 
 
     def solve(self):
         # Create the optimization problem
@@ -34,8 +35,7 @@ class PCenterSolver:
                 prob += x[i][j] <= y[j]
             
             # Constraint: z must be at least the distance of each assignment
-            prob += pulp.lpSum([self.distances[i, j] * x[i][j] for j in self.nodes]) <= z
-            
+            prob += self.weights[i] * pulp.lpSum([self.distances[i, j] * x[i][j] for j in self.nodes]) <= z
         # Run the solver without terminal logs
         prob.solve(pulp.PULP_CBC_CMD(msg=0))
         
