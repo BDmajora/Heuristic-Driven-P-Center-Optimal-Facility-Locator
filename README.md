@@ -15,12 +15,12 @@ A geospatial optimization engine built in **Python** using the **PuLP** library 
 Before running the solver, you must manually acquire the demographic datasets from Statistics Canada.
 
 ### 1. Download Census Profile Data
-Create a directory named `DAdata` in the project root. Download the "Canada, provinces, territories, census divisions (CDs), census subdivisions (CSDs) and dissemination areas (DAs)" dataset and place the CSV inside:
+Create a directory named `PopulationData` in the project root. Download the "Canada, provinces, territories, census divisions (CDs), census subdivisions (CSDs) and dissemination areas (DAs)" dataset and place the CSV inside:
 * **Download Page:** [StatCan Census Profiles](https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/details/download-telecharger.cfm?Lang=E)
 * **Direct Download:** [CSV File Link](https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/details/download-telecharger/comp/GetFile.cfm?Lang=E&FILETYPE=CSV&GEONO=006)
 
 ### 2. Download Boundary Shapefiles
-Create a directory named `PopulationData` in the project root. Download the Dissemination Area boundary files and place the unzipped contents inside:
+Create a directory named `data/DAdata` in the project root. Download the Dissemination Area boundary files and place the unzipped contents inside:
 * **Download Page:** [StatCan Boundary Files](https://www12.statcan.gc.ca/census-recensement/alternative_alternatif.cfm?l=eng&dispext=zip&teng=lda_000b21a_e.zip&k=%20%20%20192424&loc=//www12.statcan.gc.ca/census-recensement/2021/geo/sip-pis/boundary-limites/files-fichiers/lda_000b21a_e.zip)
 * **Direct Download:** [ZIP File Link](https://www12.statcan.gc.ca/census-recensement/2021/geo/sip-pis/boundary-limites/files-fichiers/lda_000b21a_e.zip)
 
